@@ -5,3 +5,4 @@ openai-whisper
 supabase
 pydantic
 requests
+python-dotenv

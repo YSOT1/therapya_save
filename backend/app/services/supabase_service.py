@@ -1,18 +1,32 @@
 # backend/app/services/supabase_service.py
 
 import os
-from supabase import create_client, Client
+from supabase import Client, create_client
 from uuid import uuid4
+from dotenv import load_dotenv
 
-SUPABASE_URL = os.getenv("https://hpgzcjqykpnajdknhlij.supabase.co")
-SUPABASE_KEY = os.getenv("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwZ3pjanF5a3BuYWpka25obGlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2Nzc5ODgsImV4cCI6MjA2MTI1Mzk4OH0.f1FN5xbyzkEv939qiKqHB7RvC1N9IQ_LbqB6I77xFMk")
+# Load environment variables
+load_dotenv()
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Debug environment variables
+print("Loading Supabase configuration...")
+print(f"SUPABASE_URL exists: {'SUPABASE_URL' in os.environ}")
+print(f"SUPABASE_KEY exists: {'SUPABASE_KEY' in os.environ}")
 
-# Buckets assumed: "recordings", "practice_videos"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise ValueError(f"Supabase credentials are not properly configured. URL: {SUPABASE_URL}, KEY: {bool(SUPABASE_KEY)}")
 
-def upload_audio_to_supabase(local_file_path: str, user_email: str) -> str:
+def init_supabase_client(url: str, key: str) -> Client:
+    """Initialize and return a Supabase client."""
+    print(f"Initializing Supabase client with URL: {url[:20]}...")  # Print first 20 chars of URL for security
+    client = create_client(url, key)
+    print("Supabase client initialized successfully!")
+    return client
+
+def upload_audio_to_supabase(supabase: Client, local_file_path: str, user_email: str) -> str:
     """
     Upload a local audio file to Supabase Storage and return public URL.
     """
@@ -29,10 +43,10 @@ def upload_audio_to_supabase(local_file_path: str, user_email: str) -> str:
     return public_url
 
 
-def get_video_clip_url(letter: str) -> str:
+def get_video_clip_url(supabase: Client, letter: str) -> str:
     """
     Get the public video clip URL for a letter.
-    (Assuming you uploaded practice clips to Supabase under "practice_videos/" bucket)
+    (Assuming you uploaded practice clips to Supabase under "practice-videos" bucket)
     """
     video_filename = f"{letter}.mp4"
-    return supabase.storage.from_("practice_videos").get_public_url(video_filename)
+    return supabase.storage.from_("practice-videos").get_public_url(video_filename)
