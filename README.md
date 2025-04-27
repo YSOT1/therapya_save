@@ -1,4 +1,4 @@
-# Therapify 
+# Therapya
 
 ## Overview
 Therapya: Your Moroccan Dialect Speech Coach that utilizes the Whisper speech recognition model to transcribe audio recordings and provide feedback on pronunciation accuracy. The application is built using FastAPI and integrates with Supabase for audio file storage.
