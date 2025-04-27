@@ -92,3 +92,20 @@ async def analyze(file: UploadFile = File(...), expected_sentence: str = Form(..
 
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
+    
+@app.post("/submit_email")
+async def submit_email(email: str = Form(...)):
+    """
+    Submit email to join the beta section.
+    """
+    try:
+        # Insert the email into the Supabase database
+        response = supabase.table("emails").insert({"email": email}).execute()
+
+        if response.get("error"):
+            raise Exception(response["error"])
+
+        return JSONResponse({"status": "success", "message": "Email submitted successfully!"})
+
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)

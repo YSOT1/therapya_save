@@ -54,7 +54,7 @@ export default function TestPronunciation() {
 
     const formData = new FormData();
     formData.append("file", audioBlob, "recording.webm");
-    formData.append("expected_sentence", TEST_SENTENCE);
+    formData.append("expected_sentence", TEST_SENTENCE); // This is already in Latin.
 
     try {
       const response = await fetch("http://localhost:8000/analyze", {
@@ -141,7 +141,7 @@ export default function TestPronunciation() {
         <Card className="p-6">
           <CardContent className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">Practice letter: {practiceLetter}</h2>
-            <video controls src={`https://your-supabase-public-url/practice_videos/${practiceLetter}.mp4`} className="rounded-lg shadow-lg" />
+            <video controls src={`https://hpgzcjqykpnajdknhlij.supabase.co/storage/v1/object/public/practice-videos//${practiceLetter}.mp4`} className="rounded-lg shadow-lg" />
             <p>After practicing, try recording again!</p>
           </CardContent>
         </Card>

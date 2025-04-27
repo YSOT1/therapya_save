@@ -1,7 +1,7 @@
 # backend/app/services/feedback_service.py
 
 from difflib import SequenceMatcher
-
+from backend.app.services.arabic_to_latin import arabic_to_latin
 # Example dictionary for Darija letter practice videos
 LETTER_PRACTICE = {
     "س": {
@@ -25,18 +25,23 @@ def analyze_pronunciation(transcript: str, expected: str) -> dict:
     print(f"Transcript: {transcript}")
     print(f"Expected: {expected}")
 
-    # Clean texts (remove extra spaces)
-    transcript = transcript.replace(" ", "").strip()
-    expected = expected.replace(" ", "").strip()
+    # Transliterate the expected sentence (if in Arabic) to Latin
+    expected_latin = arabic_to_latin(expected)
 
-    matcher = SequenceMatcher(None, expected, transcript)
+    # Clean texts (already in Latin for comparison)
+    transcript = transcript.lower().replace(" ", "").strip()
+    expected_latin = expected_latin.lower().replace(" ", "").strip()
+
     wrong_letters = []
 
-    for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
-        if opcode != 'equal':
-            # Means mismatch
-            mistake_in_expected = expected[a0:a1]
-            wrong_letters.extend(list(mistake_in_expected))
+    # Compare character by character
+    for i in range(min(len(expected_latin), len(transcript))):
+        if expected_latin[i] != transcript[i]:
+            wrong_letters.append(expected_latin[i])
+
+    # If expected is longer than transcript, missing letters are also wrong
+    if len(expected_latin) > len(transcript):
+        wrong_letters.extend(expected_latin[len(transcript):])
 
     # Build feedback
     feedback = {
@@ -44,7 +49,7 @@ def analyze_pronunciation(transcript: str, expected: str) -> dict:
         "mistakes": []
     }
 
-    for letter in wrong_letters:
+    for letter in set(wrong_letters):  # unique mistakes only
         if letter in LETTER_PRACTICE:
             feedback["mistakes"].append({
                 "letter": letter,
