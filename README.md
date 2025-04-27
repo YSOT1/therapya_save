@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# Therapify 
 
-## Project info
+## Overview
+Therapya: Your Moroccan Dialect Speech Coach that utilizes the Whisper speech recognition model to transcribe audio recordings and provide feedback on pronunciation accuracy. The application is built using FastAPI and integrates with Supabase for audio file storage.
 
-**URL**: https://lovable.dev/projects/23473fc9-4749-4efd-b8bf-0c98c1d6d230
+## Features
+- Upload audio recordings for pronunciation analysis.
+- Transcribe audio to text using the Whisper model.
+- Compare transcriptions against expected sentences.
+- Provide feedback on pronunciation, including tips for improvement.
 
-## How can I edit this code?
+## Technologies Used
+- **FastAPI**: A modern web framework for building APIs with Python.
+- **Whisper**: An automatic speech recognition (ASR) model developed by OpenAI.
+- **Supabase**: An open-source Firebase alternative for database and storage.
+- **Python**: The programming language used for backend development.
+- **JavaScript/TypeScript**: For the frontend (if applicable).
 
-There are several ways of editing your application.
+## Installation
 
-**Use Lovable**
+### Prerequisites
+- Python 3.7 or higher
+- Node.js (if you have a frontend)
+- A Supabase account for database and storage
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/23473fc9-4749-4efd-b8bf-0c98c1d6d230) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Clone the Repository
+```bash
+git clone https://github.com/yourusername/your-repo-name.git
+cd your-repo-name
 ```
 
-**Edit a file directly in GitHub**
+### Set Up a Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-**Use GitHub Codespaces**
+### Set Up Environment Variables
+Create a `.env` file in the root directory and add the following variables:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+FRONTEND_URL=http://localhost:3000  # Adjust as necessary
+UPLOAD_DIR=./temp_uploads  # Directory for temporary uploads
 
-## What technologies are used for this project?
+## Running the Application
+To start the FastAPI server, run:
+```bash
+uvicorn main:app --reload
+```
+The application will be available at `http://127.0.0.1:8000`.
 
-This project is built with:
+## API Endpoints
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Upload Audio
+- **POST** `/upload_audio`
+  - **Parameters**: 
+    - `file`: The audio file to upload.
+    - `email`: User's email for file identification.
+  - **Response**: Returns the public URL of the uploaded audio.
 
-## How can I deploy this project?
+### Analyze Pronunciation
+- **POST** `/analyze`
+  - **Parameters**: 
+    - `file`: The audio file to analyze.
+    - `expected_sentence`: The expected sentence for comparison.
+  - **Response**: Returns the transcription and feedback on pronunciation.
 
-Simply open [Lovable](https://lovable.dev/projects/23473fc9-4749-4efd-b8bf-0c98c1d6d230) and click on Share -> Publish.
+## Frontend
+If you have a frontend application, ensure it is set up to communicate with the backend API. Adjust the API URLs as necessary based on your deployment.
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
 
-Yes, you can!
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Acknowledgments
+- OpenAI for the Whisper model.
+- Supabase for providing a robust backend solution.
